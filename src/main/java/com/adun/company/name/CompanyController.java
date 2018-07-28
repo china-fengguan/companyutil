@@ -22,29 +22,34 @@ import com.adun.company.name.*;
 @RestController
 public class CompanyController {
 
-    @Autowired
-    ICompanyService companyService;
-    private static final Logger logger = LoggerFactory.getLogger(CompanyController.class);
+	@Autowired
+	ICompanyService companyService;
+	private static final Logger logger = LoggerFactory.getLogger(CompanyController.class);
 
-    @RequestMapping(value = "/api/queryCompanies", method = RequestMethod.POST)
-    public Object queryCompanies(@RequestBody ReqParams reqParam) {
+	@RequestMapping(value = "/queryCompanies", method = RequestMethod.POST)
+	public Object queryCompanies(@RequestBody ReqParams reqParam) {
 		int itemPerPage = reqParam.getItemsPerPage();
 		int currentPage = reqParam.getCurrentPage();
 		String companyName = reqParam.getCompanyName();
-		logger.info("CompanyController start with " + companyName);
-		if(companyName.isEmpty()) companyName = "爱";
-		
-    	List<Company> companies = (List<Company>) companyService.findByNameLike("%" + companyName + "%");
+		int location = reqParam.getLocation();
+		logger.info("CompanyController start with " + location);
+		if (companyName.isEmpty())
+			companyName = "爱";
+		List<Company> companies = null;
+		if (location == 0)
+			companies = (List<Company>) companyService.findByNameLike(companyName + "%");
+		else {
+			companies = (List<Company>) companyService.findByNameLike("%" + companyName);
+		}
 		PagedListHolder<Company> pagedList = new PagedListHolder<Company>(companies);
 		pagedList.setPageSize(itemPerPage);
-		pagedList.setPage(currentPage-1);
+		pagedList.setPage(currentPage - 1);
 		List<Company> pageResult = pagedList.getPageList();
-		
-		Map<String,Object> companyMap = new HashMap<String, Object>();
-		companyMap.put("totalCompanyName",companies.size());
+
+		Map<String, Object> companyMap = new HashMap<String, Object>();
+		companyMap.put("totalCompanyName", companies.size());
 		companyMap.put("pageResult", pageResult);
 		logger.info("CompanyController end");
-    	return companyMap;
-    }
+		return companyMap;
+	}
 }
-

@@ -6,6 +6,7 @@ public class ReqParams {
 	private String companyName;
 	private int itemsPerPage;
 	private int currentPage;
+	private int location;
 
 	public String getCompanyName() {
 		return companyName;
@@ -37,6 +38,14 @@ public class ReqParams {
 
 	public void setCurrentPage(int currentPage) {
 		this.currentPage = currentPage;
+	}
+
+	public int getLocation() {
+		return location;
+	}
+
+	public void setLocation(int location) {
+		this.location = location;
 	}
 
 }
